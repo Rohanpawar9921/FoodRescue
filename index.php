@@ -39,6 +39,7 @@ session_start();
     <?php else: ?>
       <a href="#" id="addProductLink" class="nav-link">Add Products</a>
       <a href="login.php" class="nav-link">Login</a>
+        <a href="signup.php" class="nav-link">Sign Up</a>
     <?php endif; ?>
   </div>
 

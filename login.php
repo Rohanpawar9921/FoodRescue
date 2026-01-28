@@ -91,10 +91,18 @@ if (isset($_SESSION['user_id'])) {
         <input type="password" name="password" placeholder="Password" required autocomplete="current-password">
         <button type="submit">Login</button>
     </form>
+
+    
     
     <div class="back-link">
         <a href="index.php">Back to Catalog</a>
     </div>
+
+    <div class="back-link">
+    <a href="signup.php">Don't have an account? Sign up</a>
+    <span>|</span>
+    <a href="index.php">Back to Catalog</a>
+</div>
 </div>
 
 <script>

@@ -2,8 +2,12 @@
 include "db.php";
 
 try {
-    // Create users table with email field
-    $conn->exec("CREATE TABLE IF NOT EXISTS users (
+    // Drop existing users table
+    $conn->exec("DROP TABLE IF EXISTS users");
+    echo "Old users table dropped!<br>";
+    
+    // Create new users table with email
+    $conn->exec("CREATE TABLE users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 
                 username TEXT NOT NULL UNIQUE,
                 email TEXT UNIQUE,
@@ -11,21 +15,21 @@ try {
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )");
     
-    echo "Users table created successfully!<br>";
-
+    echo "New users table created with email column!<br>";
+    
     // Create default admin user
     $username = "admin";
     $password = password_hash("admin123", PASSWORD_DEFAULT);
-
-    $stmt = $conn->prepare("INSERT OR IGNORE INTO users (username, password) VALUES (?, ?)");
+    
+    $stmt = $conn->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
     $stmt->execute([$username, $password]);
-
-    echo "Default user created successfully!<br>";
+    
+    echo "Default admin user created!<br>";
     echo "Username: admin<br>";
     echo "Password: admin123<br>";
-    echo "<br><a href='../login.php'>Go to login</a>";
     echo "<br><a href='../signup.php'>Go to signup</a>";
+    
 } catch(PDOException $e) {
-    die("Setup failed: " . $e->getMessage());
+    die("Error: " . $e->getMessage());
 }
 ?>
