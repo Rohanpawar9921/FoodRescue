@@ -1,19 +1,15 @@
 <?php
-
 session_start();
 
-// Check if the user is already logged in
+// If already logged in, redirect to admin
 if (isset($_SESSION['user_id'])) {
-    header("Location: dashboard.php");
+    header("Location: index.php");
     exit();
 }
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Product Catalog</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -56,6 +52,7 @@ if (isset($_SESSION['user_id'])) {
             border: 2px solid #e0e0e0;
             border-radius: 5px;
             font-size: 14px;
+            box-sizing: border-box;
         }
         .login-container form input:focus {
             outline: none;
@@ -80,27 +77,58 @@ if (isset($_SESSION['user_id'])) {
             margin-top: 20px;
         }
     </style>
-
 </head>
 <body>
-    <div class="login-container">
-        <h1>Login</h1>
 
-        <div class="error-msg" id="error-msg"></div>
-        <div class="success-msg" id="success-msg"></div>
-
-        <form id="login-form">
-            <input type="text" name="username" placeholder="Username" required autocomplete="username">
-            <input type ="password" placeholder="Password" name="password" required autocomplete="current-password">
-            <button type="submit">Login
-                Login
-            </button>
-        </form>
-
-        <div class="back-link">
-            <a href="index.php">Back to Home</a>
-        </div>
-        
+<div class="login-container">
+    <h1>🔐 Login</h1>
+    
+    <div id="error-msg" class="error-msg"></div>
+    <div id="success-msg" class="success-msg"></div>
+    
+    <form id="loginForm">
+        <input type="text" name="username" placeholder="Username" required autocomplete="username">
+        <input type="password" name="password" placeholder="Password" required autocomplete="current-password">
+        <button type="submit">Login</button>
+    </form>
+    
+    <div class="back-link">
+        <a href="index.php">Back to Catalog</a>
     </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        console.log("jQuery loaded:", typeof $ !== 'undefined');
+        
+        $("#loginForm").submit(function(e) {
+            e.preventDefault();
+            console.log("Form submitted");
+            
+            $("#error-msg").hide();
+            $("#success-msg").hide();
+            
+            var formData = $(this).serialize();
+            console.log("Form data:", formData);
+
+            $.post("php/login.php", formData, function(res) {
+                console.log("Response received:", res);
+                
+                if(res.indexOf("Success") !== -1) {
+                    $("#success-msg").text(res).show();
+                    setTimeout(function() {
+                        window.location.href = "index.php";
+                    }, 500);
+                } else {
+                    $("#error-msg").text(res).show();
+                }
+            }).fail(function(xhr, status, error) {
+                console.log("AJAX Error:", status, error);
+                $("#error-msg").text("Error: " + error).show();
+            });
+        });
+    });
+</script>
+
 </body>
 </html>

@@ -4,11 +4,39 @@
     <title>Edit Product</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .user-info {
+            font-size: 14px;
+            color: #666;
+        }
+        .logout-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .logout-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>✏️ Edit Product</h1>
+    <div class="header-bar">
+        <h1>✏️ Edit Product</h1>
+        <div>
+            <span class="user_info">Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!!</span>
+        </div>
+    </div>
 
     <div id="loader" style="display:block;">Loading product...</div>
 

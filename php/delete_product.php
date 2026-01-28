@@ -1,4 +1,10 @@
 <?php
+session_start();
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    die("You must be logged in to delete products");
+}
 
 include "db.php";
 $productId = $_POST['product_id'];
@@ -11,3 +17,4 @@ try {
 } catch(PDOException $e) {
     die("Error: " . $e->getMessage());
 }
+?>
