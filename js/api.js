@@ -2,9 +2,10 @@
  * API Helper for OOP Backend
  * Provides a simple interface to call controller actions
  */
-const API = {
+const API = { //it is an object - single global
     baseURL: 'api/index.php',
     
+    // contract documentation - what frontend sends, what backend expects, what frontend receives
     /**
      * Call a controller action
      * @param {string} controller - Controller name (e.g., 'product')
@@ -12,7 +13,7 @@ const API = {
      * @param {object} data - Additional data to send
      * @returns {Promise} Promise that resolves with response data
      */
-    call: function(controller, action, data = {}) {
+    call: function(controller, action, data = {}) { //generic method
         return new Promise((resolve, reject) => {
             const params = {
                 controller: controller,
@@ -20,7 +21,7 @@ const API = {
                 ...data
             };
             
-            $.ajax({
+            $.ajax({ //asynchronours http requrests without reloading the page
                 url: this.baseURL,
                 type: 'POST',
                 data: params,
