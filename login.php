@@ -91,11 +91,26 @@ if (isset($_SESSION['user_id'])) {
         <input type="password" name="password" placeholder="Password" required autocomplete="current-password">
         <button type="submit">Login</button>
     </form>
-
     
+    <div style="text-align: center; margin: 20px 0;">
+        <a href="#" style="color: #667eea; text-decoration: none; font-size: 14px;">Forgot Password?</a>
+    </div>
+    
+    <div style="text-align: center; margin: 20px 0; color: #999;">or continue with</div>
+    
+    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <button type="button" style="flex: 1; padding: 12px; border: 2px solid #e0e0e0; background: white; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="alert('Google login coming soon!')">
+            <span style="font-size: 20px;">🔍</span> Google
+        </button>
+        <button type="button" style="flex: 1; padding: 12px; border: 2px solid #e0e0e0; background: white; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="alert('GitHub login coming soon!')">
+            <span style="font-size: 20px;">🐙</span> GitHub
+        </button>
+    </div>
     
     <div class="back-link">
-        <a href="index.php">Back to Catalog</a>
+        <a href="signup.php">Don't have an account? Sign up</a>
+        <span style="margin: 0 10px;">|</span>
+        <a href="home.php">Back to Home</a>
     </div>
 
     <div class="back-link">

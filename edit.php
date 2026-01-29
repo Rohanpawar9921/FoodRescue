@@ -59,6 +59,8 @@
     </div>
 </div>
 
+<!-- New OOP API Helper -->
+<script src="js/api.js"></script>
 <script> 
     $(document).ready(function() {
         // Get product ID from URL
@@ -70,11 +72,9 @@
             return;
         }
         
-        // Load product data
-        $.get("php/get_product.php", {id: productId}, function(response) {
-            try {
-                const product = JSON.parse(response);
-                
+        // Load product data using new API
+        API.call('product', 'get', {id: productId})
+            .then(function(product) {
                 $("#productId").val(product.id);
                 $("#productName").val(product.name);
                 $("#productPrice").val(product.price);
@@ -82,22 +82,31 @@
                 
                 $("#loader").hide();
                 $("#editProduct").show();
-            } catch(e) {
-                $("#loader").html("Error loading product: " + response);
-            }
-        }).fail(function() {
-            $("#loader").html("Failed to load product");
-        });
+            })
+            .catch(function(error) {
+                $("#loader").html(`<p style="color: red;">Error: ${error}</p>`);
+            });
         
-        // Handle form submission
+        // Handle form submission using new API
         $("#editProduct").submit(function(e) {
             e.preventDefault();
-            $.post("php/update_product.php", $(this).serialize(), function(res) {
-                $("#msg").html(res);
-                setTimeout(function() {
-                    window.location.href = "index.php";
-                }, 1500);
-            });
+            const formData = {
+                id: $("#productId").val(),
+                name: $("#productName").val(),
+                price: $("#productPrice").val(),
+                category_id: $("#productCategory").val()
+            };
+            
+            API.call('product', 'update', formData)
+                .then(function(result) {
+                    $("#msg").html(`<p style="color: green;">${result.message}</p>`);
+                    setTimeout(function() {
+                        window.location.href = "index.php";
+                    }, 1500);
+                })
+                .catch(function(error) {
+                    $("#msg").html(`<p style="color: red;">Error: ${error}</p>`);
+                });
         });
     });
 </script>

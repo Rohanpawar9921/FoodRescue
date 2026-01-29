@@ -109,6 +109,19 @@ if(isset($_SESSION['user_id'])) {
     <div id="error-msg" class="error-msg"></div>
     <div id="success-msg" class="success-msg"></div>
     
+    <div style="text-align: center; margin-bottom: 20px; color: #999;">Sign up with</div>
+    
+    <div style="display: flex; gap: 10px; margin-bottom: 25px;">
+        <button style="flex: 1; padding: 12px; border: 2px solid #e0e0e0; background: white; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="alert('Google signup coming soon!')">
+            <span style="font-size: 20px;">🔍</span> Google
+        </button>
+        <button style="flex: 1; padding: 12px; border: 2px solid #e0e0e0; background: white; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="alert('GitHub signup coming soon!')">
+            <span style="font-size: 20px;">🐙</span> GitHub
+        </button>
+    </div>
+    
+    <div style="text-align: center; margin-bottom: 20px; color: #999;">or use email</div>
+    
     <form id="signupForm">
         <input type="text" name="username" id="username" placeholder="Username" required 
                minlength="3" maxlength="50" autocomplete="username">
@@ -135,7 +148,7 @@ if(isset($_SESSION['user_id'])) {
     <div class="links">
         <a href="login.php">Already have an account? Login</a>
         <span>|</span>
-        <a href="index.php">Back to Catalog</a>
+        <a href="home.php">Back to Home</a>
     </div>
 </div>
 
