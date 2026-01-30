@@ -11,7 +11,7 @@
 [![SQLite](https://img.shields.io/badge/SQLite-3-003B57?style=flat-square&logo=sqlite&logoColor=white)](https://sqlite.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 
-[Live Demo](#) · [Report Bug](#) · [Request Feature](#)
+[Live Demo](https://foodrescue-2nn9.onrender.com/pages/home.php) · [Report Bug](https://github.com/Rohanpawar9921/FoodRescue/issues) · [Request Feature](https://github.com/Rohanpawar9921/FoodRescue/issues)
 
 </div>
 
@@ -95,8 +95,8 @@ Server:    Built-in PHP  │  No Complex Setup Required
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/Rohanpawar99/E-commerse-Full-Stack.git
-cd E-commerse-Full-Stack
+git clone https://github.com/Rohanpawar9921/FoodRescue.git
+cd FoodRescue
 
 # 2. Verify database (auto-created if missing)
 php -r "new PDO('sqlite:mini_shop.db');"
@@ -533,8 +533,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Star this repo if you believe in fighting food waste!**
 
-[![GitHub stars](https://img.shields.io/github/stars/Rohanpawar99/E-commerse-Full-Stack?style=social)](https://github.com/Rohanpawar99/E-commerse-Full-Stack)
-[![GitHub forks](https://img.shields.io/github/forks/Rohanpawar99/E-commerse-Full-Stack?style=social)](https://github.com/Rohanpawar99/E-commerse-Full-Stack/fork)
+[![GitHub stars](https://img.shields.io/github/stars/Rohanpawar9921/FoodRescue?style=social)](https://github.com/Rohanpawar9921/FoodRescue)
+[![GitHub forks](https://img.shields.io/github/forks/Rohanpawar9921/FoodRescue?style=social)](https://github.com/Rohanpawar9921/FoodRescue/fork)
+
+**🌐 Live Demo:** [https://foodrescue-2nn9.onrender.com/pages/index.php](https://foodrescue-2nn9.onrender.com/pages/index.php)
 
 ---
 
