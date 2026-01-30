@@ -27,6 +27,47 @@ session_start();
     .glass-effect { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
     .urgent-badge { animation: pulse-green 2s ease-in-out infinite; }
     .leaf-pattern { background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 30c10-10 20-15 20-15s-5 10-15 20c-10 10-20 15-20 15s5-10 15-20z' fill='%2310b981' fill-opacity='0.05'/%3E%3C/svg%3E"); }
+    
+    /* Interactive Cards Animation */
+    #interactive-cards-container {
+      position: relative;
+      width: 100%;
+      height: 450px;
+    }
+    .interactive-card {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.15s ease-out;
+      will-change: transform;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .interactive-card:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+    .card-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .card-value {
+      font-size: 20px;
+      font-weight: 800;
+    }
+    .card-subtitle {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.8);
+    }
   </style>
 </head>
 <body class="bg-green-50 leaf-pattern">
@@ -113,20 +154,9 @@ session_start();
         </div>
       </div>
       <div class="hidden lg:flex items-center justify-center animate-fadeIn">
-        <div class="relative"><div class="grid grid-cols-2 gap-4">
-          <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 text-center border border-white border-opacity-20">
-            <i class="fas fa-bread-slice text-4xl mb-2"></i><div class="text-2xl font-bold">40%</div><div class="text-xs text-green-100">Less Waste</div>
-          </div>
-          <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 text-center border border-white border-opacity-20 mt-8">
-            <i class="fas fa-hand-holding-heart text-4xl mb-2"></i><div class="text-2xl font-bold">500+</div><div class="text-xs text-green-100">Partners</div>
-          </div>
-          <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 text-center border border-white border-opacity-20">
-            <i class="fas fa-leaf text-4xl mb-2"></i><div class="text-2xl font-bold">CO₂</div><div class="text-xs text-green-100">Reduced</div>
-          </div>
-          <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 text-center border border-white border-opacity-20 mt-8">
-            <i class="fas fa-clock text-4xl mb-2"></i><div class="text-2xl font-bold">24/7</div><div class="text-xs text-green-100">Rescue</div>
-          </div>
-        </div></div>
+        <div id="interactive-cards-container" class="relative w-full max-w-lg">
+          <!-- Cards will be dynamically created here -->
+        </div>
       </div>
     </div>
   </div>
@@ -277,6 +307,210 @@ $(document).ready(function() {
   $("#addProductLink").click(function(e) { e.preventDefault(); alert("Please login to list surplus food!"); window.location.href = "login.php"; });
 });
 <?php endif; ?>
+
+// Interactive Cards Animation
+(function() {
+  const container = document.getElementById('interactive-cards-container');
+  if (!container) return;
+  
+  const cards = [];
+  const cardData = [
+    { icon: '🍕', title: 'Pizza', value: '15', subtitle: 'available today' },
+    { icon: '🥐', title: 'Bakery', value: '23', subtitle: 'fresh items' },
+    { icon: '🥗', title: 'Salads', value: '12', subtitle: 'healthy options' },
+    { icon: '🍜', title: 'Meals', value: '18', subtitle: 'hot & ready' },
+    { icon: '🍰', title: 'Desserts', value: '9', subtitle: 'sweet treats' },
+    { icon: '☕', title: 'Drinks', value: '14', subtitle: 'beverages' },
+    { icon: '🥪', title: 'Sandwiches', value: '11', subtitle: 'quick bites' },
+    { icon: '🍱', title: 'Combos', value: '8', subtitle: 'meal deals' },
+    { icon: '🌮', title: 'Wraps', value: '7', subtitle: 'on the go' },
+    { icon: '🍝', title: 'Pasta', value: '13', subtitle: 'Italian fare' },
+    { icon: '🍔', title: 'Burgers', value: '10', subtitle: 'grill items' },
+    { icon: '🥟', title: 'Snacks', value: '16', subtitle: 'light bites' },
+    { icon: '🍲', title: 'Soups', value: '6', subtitle: 'warm bowls' },
+    { icon: '🍩', title: 'Donuts', value: '20', subtitle: 'glazed fresh' },
+    { icon: '🥙', title: 'Kebabs', value: '5', subtitle: 'grilled meat' }
+  ];
+  
+  // Create cards with varied sizes and positions
+  cardData.forEach((data, index) => {
+    const card = document.createElement('div');
+    card.className = 'interactive-card';
+    
+    // Vary card sizes
+    const widths = [120, 110, 130, 115];
+    const heights = [100, 95, 110, 105];
+    const width = widths[index % widths.length];
+    const height = heights[index % heights.length];
+    
+    card.style.width = width + 'px';
+    card.style.height = height + 'px';
+    
+    // Initial scattered positions in a grid-like pattern
+    const cols = 4;
+    const rows = Math.ceil(cardData.length / cols);
+    const col = index % cols;
+    const row = Math.floor(index / cols);
+    
+    // Add some randomness to positions
+    const baseX = col * 130 + Math.random() * 20;
+    const baseY = row * 115 + Math.random() * 20;
+    
+    card.style.left = baseX + 'px';
+    card.style.top = baseY + 'px';
+    
+    // Card content
+    card.innerHTML = `
+      <div class="card-icon">${data.icon}</div>
+      <div class="card-title">${data.title}</div>
+      <div class="card-value">${data.value}</div>
+      <div class="card-subtitle">${data.subtitle}</div>
+    `;
+    
+    container.appendChild(card);
+    
+    // Store card data for animations
+    cards.push({
+      element: card,
+      originalX: baseX,
+      originalY: baseY,
+      currentX: baseX,
+      currentY: baseY,
+      velocityX: 0,
+      velocityY: 0,
+      isExploding: false,
+      avoidanceRadius: 80
+    });
+  });
+  
+  let mouseX = 0;
+  let mouseY = 0;
+  let isMouseInContainer = false;
+  
+  // Track mouse position
+  container.addEventListener('mousemove', (e) => {
+    const rect = container.getBoundingClientRect();
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
+    isMouseInContainer = true;
+  });
+  
+  container.addEventListener('mouseleave', () => {
+    isMouseInContainer = false;
+  });
+  
+  // Click to explode
+  container.addEventListener('click', (e) => {
+    const rect = container.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+    
+    cards.forEach(card => {
+      const cardCenterX = card.currentX + card.element.offsetWidth / 2;
+      const cardCenterY = card.currentY + card.element.offsetHeight / 2;
+      
+      const dx = cardCenterX - clickX;
+      const dy = cardCenterY - clickY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      // Explosion force - closer cards get more force
+      const force = Math.max(20, 100 / (distance + 10));
+      card.velocityX = (dx / distance) * force * (0.5 + Math.random());
+      card.velocityY = (dy / distance) * force * (0.5 + Math.random());
+      card.isExploding = true;
+      
+      // Add spin effect
+      card.element.style.transition = 'transform 0.3s ease-out';
+      card.element.style.transform = `rotate(${Math.random() * 360}deg)`;
+    });
+  });
+  
+  // Animation loop
+  function animate() {
+    cards.forEach(card => {
+      if (card.isExploding) {
+        // Apply explosion velocity
+        card.currentX += card.velocityX;
+        card.currentY += card.velocityY;
+        
+        // Friction/damping
+        card.velocityX *= 0.92;
+        card.velocityY *= 0.92;
+        
+        // Spring force back to original position
+        const springForce = 0.03;
+        card.velocityX += (card.originalX - card.currentX) * springForce;
+        card.velocityY += (card.originalY - card.currentY) * springForce;
+        
+        // Check if settled
+        const totalVelocity = Math.abs(card.velocityX) + Math.abs(card.velocityY);
+        if (totalVelocity < 0.5) {
+          card.isExploding = false;
+          card.currentX = card.originalX;
+          card.currentY = card.originalY;
+          card.element.style.transform = 'rotate(0deg)';
+        }
+      } else if (isMouseInContainer) {
+        // Cursor avoidance effect
+        const cardCenterX = card.currentX + card.element.offsetWidth / 2;
+        const cardCenterY = card.currentY + card.element.offsetHeight / 2;
+        
+        const dx = cardCenterX - mouseX;
+        const dy = cardCenterY - mouseY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < card.avoidanceRadius) {
+          // Move away from cursor
+          const avoidForce = (1 - distance / card.avoidanceRadius) * 2;
+          card.velocityX += (dx / distance) * avoidForce;
+          card.velocityY += (dy / distance) * avoidForce;
+        }
+        
+        // Always pull back towards original position
+        const returnForce = 0.05;
+        card.velocityX += (card.originalX - card.currentX) * returnForce;
+        card.velocityY += (card.originalY - card.currentY) * returnForce;
+        
+        // Apply velocity
+        card.currentX += card.velocityX;
+        card.currentY += card.velocityY;
+        
+        // Damping
+        card.velocityX *= 0.85;
+        card.velocityY *= 0.85;
+      } else {
+        // Return to original position smoothly when mouse leaves
+        const returnForce = 0.08;
+        card.velocityX += (card.originalX - card.currentX) * returnForce;
+        card.velocityY += (card.originalY - card.currentY) * returnForce;
+        
+        card.currentX += card.velocityX;
+        card.currentY += card.velocityY;
+        
+        card.velocityX *= 0.9;
+        card.velocityY *= 0.9;
+        
+        // Snap to position if close enough
+        if (Math.abs(card.currentX - card.originalX) < 1 && 
+            Math.abs(card.currentY - card.originalY) < 1) {
+          card.currentX = card.originalX;
+          card.currentY = card.originalY;
+          card.velocityX = 0;
+          card.velocityY = 0;
+        }
+      }
+      
+      // Update position
+      card.element.style.left = card.currentX + 'px';
+      card.element.style.top = card.currentY + 'px';
+    });
+    
+    requestAnimationFrame(animate);
+  }
+  
+  // Start animation
+  animate();
+})();
 </script>
 
 <div id="cookieConsentBanner" class="fixed bottom-0 left-0 right-0 bg-white shadow-2xl border-t-4 border-green-600 z-50 hidden">
