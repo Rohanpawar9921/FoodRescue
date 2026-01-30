@@ -10,6 +10,7 @@ session_start();
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -84,10 +85,27 @@ session_start();
         
         /* Hero Section */
         .hero {
+            position: relative;
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             padding: 100px 20px;
             text-align: center;
+            overflow: hidden;
+        }
+        
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
         }
         
         .hero h1 {
@@ -414,14 +432,17 @@ session_start();
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero">
-        <h1>🌍 Fight Food Waste, Feed the Future</h1>
-        <p>Join the movement to rescue surplus food and make a positive impact on our planet</p>
-        <div class="hero-buttons">
-            <a href="index.php" class="btn-large btn-white"><i class="fas fa-utensils mr-2"></i>Rescue Food Now</a>
-            <?php if (!isset($_SESSION['user_id'])): ?>
-                <a href="signup.php" class="btn-large btn-outline"><i class="fas fa-user-plus mr-2"></i>Join Our Mission</a>
-            <?php endif; ?>
+    <section class="hero" id="hero-section">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-content">
+            <h1>🌍 Fight Food Waste, Feed the Future</h1>
+            <p>Join the movement to rescue surplus food and make a positive impact on our planet</p>
+            <div class="hero-buttons">
+                <a href="index.php" class="btn-large btn-white"><i class="fas fa-utensils mr-2"></i>Rescue Food Now</a>
+                <?php if (!isset($_SESSION['user_id'])): ?>
+                    <a href="signup.php" class="btn-large btn-outline"><i class="fas fa-user-plus mr-2"></i>Join Our Mission</a>
+                <?php endif; ?>
+            </div>
         </div>
     </section>
 
@@ -536,6 +557,135 @@ session_start();
             <p>&copy; 2026 FoodRescue. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- Three.js Hero Animation -->
+    <script>
+        // Initialize Three.js scene
+        const canvas = document.getElementById('hero-canvas');
+        const heroSection = document.getElementById('hero-section');
+        
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, heroSection.offsetWidth / heroSection.offsetHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+        
+        renderer.setSize(heroSection.offsetWidth, heroSection.offsetHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        camera.position.z = 30;
+        
+        // Create floating geometric shapes
+        const shapes = [];
+        const geometries = [
+            new THREE.OctahedronGeometry(1.5),
+            new THREE.IcosahedronGeometry(1.2),
+            new THREE.TetrahedronGeometry(1.8),
+            new THREE.BoxGeometry(2, 2, 2),
+            new THREE.TorusGeometry(1, 0.4, 16, 100)
+        ];
+        
+        // Material with subtle white/green tones
+        const material = new THREE.MeshPhongMaterial({
+            color: 0xffffff,
+            shininess: 100,
+            transparent: true,
+            opacity: 0.7,
+            wireframe: false
+        });
+        
+        // Create multiple floating shapes
+        for (let i = 0; i < 15; i++) {
+            const geometry = geometries[Math.floor(Math.random() * geometries.length)];
+            const mesh = new THREE.Mesh(geometry, material.clone());
+            
+            // Random positions
+            mesh.position.x = (Math.random() - 0.5) * 60;
+            mesh.position.y = (Math.random() - 0.5) * 40;
+            mesh.position.z = (Math.random() - 0.5) * 40;
+            
+            // Random rotation speeds
+            mesh.rotationSpeed = {
+                x: (Math.random() - 0.5) * 0.01,
+                y: (Math.random() - 0.5) * 0.01,
+                z: (Math.random() - 0.5) * 0.01
+            };
+            
+            // Random floating animation
+            mesh.floatSpeed = Math.random() * 0.02 + 0.01;
+            mesh.floatAmplitude = Math.random() * 2 + 1;
+            mesh.floatOffset = Math.random() * Math.PI * 2;
+            
+            shapes.push(mesh);
+            scene.add(mesh);
+        }
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        
+        const pointLight1 = new THREE.PointLight(0xffffff, 1, 100);
+        pointLight1.position.set(20, 20, 20);
+        scene.add(pointLight1);
+        
+        const pointLight2 = new THREE.PointLight(0x10b981, 0.8, 100);
+        pointLight2.position.set(-20, -20, 10);
+        scene.add(pointLight2);
+        
+        // Mouse interaction
+        let mouseX = 0;
+        let mouseY = 0;
+        
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        });
+        
+        // Animation loop
+        let time = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.01;
+            
+            // Animate each shape
+            shapes.forEach((shape, index) => {
+                // Rotation
+                shape.rotation.x += shape.rotationSpeed.x;
+                shape.rotation.y += shape.rotationSpeed.y;
+                shape.rotation.z += shape.rotationSpeed.z;
+                
+                // Floating motion
+                shape.position.y += Math.sin(time * shape.floatSpeed + shape.floatOffset) * 0.05;
+                
+                // Parallax effect
+                shape.position.x += (mouseX * 3 - shape.position.x) * 0.01;
+                shape.position.y += (mouseY * 3 - shape.position.y) * 0.01;
+                
+                // Keep shapes within bounds
+                if (Math.abs(shape.position.x) > 40) {
+                    shape.position.x *= 0.9;
+                }
+                if (Math.abs(shape.position.y) > 30) {
+                    shape.position.y *= 0.9;
+                }
+            });
+            
+            // Slight camera movement
+            camera.position.x = mouseX * 2;
+            camera.position.y = mouseY * 2;
+            camera.lookAt(scene.position);
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = heroSection.offsetWidth / heroSection.offsetHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(heroSection.offsetWidth, heroSection.offsetHeight);
+        });
+        
+        // Start animation
+        animate();
+    </script>
 
 </body>
 </html>
