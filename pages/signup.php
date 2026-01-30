@@ -15,7 +15,7 @@ if(isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign up - Product Catalog</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .signup-container {
@@ -29,7 +29,7 @@ if(isset($_SESSION['user_id'])) {
         .signup-container h1 {
             text-align: center;
             margin-bottom: 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -60,12 +60,12 @@ if(isset($_SESSION['user_id'])) {
         }
         .signup-container form input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #10b981;
         }
         .signup-container form button {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             border: none;
             border-radius: 5px;
@@ -93,7 +93,7 @@ if(isset($_SESSION['user_id'])) {
             margin-top: 20px;
         }
         .links a {
-            color: #667eea;
+            color: #10b981;
             text-decoration: none;
             margin: 0 10px;
         }
@@ -181,7 +181,7 @@ if(isset($_SESSION['user_id'])) {
             }
             
             // Submit via AJAX
-            $.post("php/signup.php", $(this).serialize(), function(res) {
+            $.post("../php/signup.php", $(this).serialize(), function(res) {
                 if(res.indexOf("Success") !== -1 || res.indexOf("created successfully") !== -1) {
                     $("#success-msg").text(res).show();
                     $("#signupForm")[0].reset();  // Line 174: Fixed $("#signupFrom") to $("#signupForm")

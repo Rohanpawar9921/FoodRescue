@@ -6,8 +6,9 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShopHub - Modern E-Commerce Platform</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>FoodRescue - Fight Food Waste, Feed the Future</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         * {
@@ -24,7 +25,7 @@ session_start();
         
         /* Navigation */
         .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             padding: 1rem 0;
             position: sticky;
@@ -69,7 +70,7 @@ session_start();
         
         .btn-primary {
             background: white;
-            color: #667eea;
+            color: #10b981;
             padding: 10px 25px;
             border-radius: 25px;
             text-decoration: none;
@@ -83,7 +84,7 @@ session_start();
         
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             padding: 100px 20px;
             text-align: center;
@@ -92,7 +93,8 @@ session_start();
         .hero h1 {
             font-size: 48px;
             margin-bottom: 20px;
-            animation: fadeInUp 1s;
+            animation: fadeInUp 1s ease-out;
+            font-weight: bold;
         }
         
         .hero p {
@@ -120,7 +122,7 @@ session_start();
         
         .btn-white {
             background: white;
-            color: #667eea;
+            color: #10b981;
         }
         
         .btn-outline {
@@ -142,9 +144,37 @@ session_start();
         
         .section-title {
             text-align: center;
-            font-size: 36px;
+            font-size: 42px;
+            margin-bottom: 20px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            padding-bottom: 20px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 2px;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
             margin-bottom: 50px;
-            color: #333;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .features-grid {
@@ -155,32 +185,63 @@ session_start();
         
         .feature-card {
             text-align: center;
-            padding: 30px;
+            padding: 40px 30px;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.4s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
         }
         
         .feature-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
+        }
+        
+        .feature-card:hover::before {
+            transform: scaleX(1);
         }
         
         .feature-icon {
-            font-size: 50px;
-            margin-bottom: 20px;
+            font-size: 56px;
+            margin-bottom: 25px;
+            display: inline-block;
+            padding: 20px;
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
         }
         
         .feature-card h3 {
-            font-size: 22px;
+            font-size: 24px;
             margin-bottom: 15px;
-            color: #667eea;
+            color: #059669;
+            font-weight: 700;
         }
         
         .feature-card p {
-            color: #666;
+            color: #6b7280;
             line-height: 1.8;
+            font-size: 15px;
         }
         
         /* Categories Section */
@@ -209,7 +270,7 @@ session_start();
         
         .category-image {
             height: 200px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -233,7 +294,7 @@ session_start();
         
         /* Stats Section */
         .stats {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
         }
         
@@ -335,7 +396,7 @@ session_start();
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="home.php" class="logo">🛍️ ShopHub</a>
+            <a href="home.php" class="logo"><i class="fas fa-leaf"></i> FoodRescue</a>
             <ul class="nav-links">
                 <li><a href="home.php">Home</a></li>
                 <li><a href="index.php">Products</a></li>
@@ -344,7 +405,7 @@ session_start();
                 <?php if (isset($_SESSION['user_id'])): ?>
                     <li><a href="admin.php">Admin</a></li>
                     <li><span>Hi, <?php echo htmlspecialchars($_SESSION['username']); ?>!</span></li>
-                    <li><a href="php/logout.php">Logout</a></li>
+                    <li><a href="../php/logout.php">Logout</a></li>
                 <?php else: ?>
                     <li><a href="login.php" class="btn-primary">Login</a></li>
                 <?php endif; ?>
@@ -354,76 +415,78 @@ session_start();
 
     <!-- Hero Section -->
     <section class="hero">
-        <h1>Welcome to ShopHub</h1>
-        <p>Your one-stop destination for all your shopping needs</p>
+        <h1>🌍 Fight Food Waste, Feed the Future</h1>
+        <p>Join the movement to rescue surplus food and make a positive impact on our planet</p>
         <div class="hero-buttons">
-            <a href="index.php" class="btn-large btn-white">Browse Products</a>
+            <a href="index.php" class="btn-large btn-white"><i class="fas fa-utensils mr-2"></i>Rescue Food Now</a>
             <?php if (!isset($_SESSION['user_id'])): ?>
-                <a href="signup.php" class="btn-large btn-outline">Sign Up Free</a>
+                <a href="signup.php" class="btn-large btn-outline"><i class="fas fa-user-plus mr-2"></i>Join Our Mission</a>
             <?php endif; ?>
         </div>
     </section>
 
     <!-- Features Section -->
     <section class="section" id="features">
-        <h2 class="section-title">Why Choose ShopHub?</h2>
+        <h2 class="section-title">How FoodRescue Makes a Difference</h2>
+        <p class="section-subtitle">Join thousands of people making an impact by rescuing food and reducing waste</p>
         <div class="features-grid">
             <div class="feature-card">
-                <div class="feature-icon">🚚</div>
-                <h3>Fast Delivery</h3>
-                <p>Get your products delivered to your doorstep within 24-48 hours across the country.</p>
+                <div class="feature-icon">🌱</div>
+                <h3>Reduce Food Waste</h3>
+                <p>Save perfectly good food from going to waste. Every meal rescued is a step towards sustainability.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">🔒</div>
-                <h3>Secure Payments</h3>
-                <p>Shop with confidence using our secure payment gateway and encryption technology.</p>
+                <div class="feature-icon">💰</div>
+                <h3>Save Money</h3>
+                <p>Get quality food at discounted prices. Help the planet while keeping your wallet happy.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">💯</div>
-                <h3>Quality Guaranteed</h3>
-                <p>Every product is carefully vetted to ensure the highest quality standards.</p>
+                <div class="feature-icon">🌍</div>
+                <h3>Help the Planet</h3>
+                <p>Reduce CO2 emissions and conserve resources. Every rescue counts towards a greener future.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">🎁</div>
-                <h3>Great Deals</h3>
-                <p>Enjoy exclusive discounts, seasonal offers, and special promotions regularly.</p>
+                <div class="feature-icon">🤝</div>
+                <h3>Support Local Businesses</h3>
+                <p>Help restaurants and stores sell surplus food instead of wasting it. Win-win for everyone.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">📞</div>
-                <h3>24/7 Support</h3>
-                <p>Our customer support team is always ready to help you with any queries.</p>
+                <div class="feature-icon">⚡</div>
+                <h3>Quick & Easy</h3>
+                <p>Browse, buy, and rescue food in minutes. Simple process, massive impact.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">↩️</div>
-                <h3>Easy Returns</h3>
-                <p>Not satisfied? Return products hassle-free within 30 days of purchase.</p>
+                <div class="feature-icon">🍽️</div>
+                <h3>Fresh Quality Food</h3>
+                <p>Surplus doesn't mean bad. Get fresh, delicious food at the end of business day.</p>
             </div>
         </div>
     </section>
 
     <!-- Categories Section -->
     <section class="section categories" id="categories">
-        <h2 class="section-title">Shop by Category</h2>
+        <h2 class="section-title">Rescue Food by Category</h2>
+        <p class="section-subtitle">Browse surplus food from bakeries, restaurants, and local vendors</p>
         <div class="category-grid">
             <div class="category-card" onclick="window.location.href='index.php?category=1'">
-                <div class="category-image">📱</div>
+                <div class="category-image">🍞</div>
                 <div class="category-content">
-                    <h3>Electronics</h3>
-                    <p>Latest gadgets, phones, laptops and more</p>
+                    <h3>Bakery & Desserts</h3>
+                    <p>Fresh breads, pastries, cakes and sweet treats</p>
                 </div>
             </div>
             <div class="category-card" onclick="window.location.href='index.php?category=2'">
-                <div class="category-image">📚</div>
+                <div class="category-image">🥗</div>
                 <div class="category-content">
-                    <h3>Books</h3>
-                    <p>Bestsellers, textbooks, novels and magazines</p>
+                    <h3>Vegetarian Meals</h3>
+                    <p>Healthy veggie dishes, salads and plant-based food</p>
                 </div>
             </div>
             <div class="category-card" onclick="window.location.href='index.php?category=3'">
-                <div class="category-image">👔</div>
+                <div class="category-image">🍗</div>
                 <div class="category-content">
-                    <h3>Clothing</h3>
-                    <p>Fashion trends, apparel and accessories</p>
+                    <h3>Non-Veg Meals</h3>
+                    <p>Chicken, fish, lamb and protein-rich meals</p>
                 </div>
             </div>
         </div>
@@ -431,32 +494,33 @@ session_start();
 
     <!-- Stats Section -->
     <section class="section stats">
-        <h2 class="section-title">Our Success Story</h2>
+        <h2 class="section-title">Our Impact</h2>
+        <p class="section-subtitle" style="color: rgba(255,255,255,0.9); margin-bottom: 50px;">Together we're making a real difference in fighting food waste</p>
         <div class="stats-grid">
             <div class="stat-item">
-                <h2>10K+</h2>
-                <p>Happy Customers</p>
+                <h2>50K+</h2>
+                <p>Meals Rescued</p>
             </div>
             <div class="stat-item">
-                <h2>500+</h2>
-                <p>Products Available</p>
+                <h2>25 Tons</h2>
+                <p>Food Waste Prevented</p>
             </div>
             <div class="stat-item">
-                <h2>50+</h2>
-                <p>Brands</p>
+                <h2>5K+</h2>
+                <p>Happy Rescuers</p>
             </div>
             <div class="stat-item">
-                <h2>4.8⭐</h2>
-                <p>Average Rating</p>
+                <h2>4.9⭐</h2>
+                <p>User Rating</p>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
     <section class="section cta">
-        <h2>Ready to Start Shopping?</h2>
-        <p>Join thousands of satisfied customers and discover amazing products today!</p>
-        <a href="index.php" class="btn-large" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">Start Shopping Now</a>
+        <h2>Ready to Make a Difference?</h2>
+        <p>Join thousands of food rescuers and help fight food waste while saving money!</p>
+        <a href="index.php" class="btn-large" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;"><i class="fas fa-leaf mr-2"></i>Start Rescuing Food Now</a>
     </section>
 
     <!-- Footer -->
@@ -469,7 +533,7 @@ session_start();
                 <a href="#terms">Terms of Service</a>
                 <a href="#help">Help Center</a>
             </div>
-            <p>&copy; 2026 ShopHub. All rights reserved.</p>
+            <p>&copy; 2026 FoodRescue. All rights reserved.</p>
         </div>
     </footer>
 

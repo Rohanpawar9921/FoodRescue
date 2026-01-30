@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: shophub-app
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - ./mini_shop.db:/var/www/html/mini_shop.db
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html
+    restart: unless-stopped
+    command: >
+      bash -c "
+      chown -R www-data:www-data /var/www/html &&
+      chmod -R 755 /var/www/html &&
+      chmod 664 /var/www/html/mini_shop.db 2>/dev/null || true &&
+      apache2-foreground
+      "

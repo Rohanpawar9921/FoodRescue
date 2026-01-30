@@ -11,7 +11,7 @@ if (isset($_SESSION['user_id'])) {
 <html>
 <head>
     <title>Login - Product Catalog</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .login-container {
@@ -25,7 +25,7 @@ if (isset($_SESSION['user_id'])) {
         .login-container h1 {
             text-align: center;
             margin-bottom: 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -56,12 +56,12 @@ if (isset($_SESSION['user_id'])) {
         }
         .login-container form input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #10b981;
         }
         .login-container form button {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             border: none;
             border-radius: 5px;
@@ -93,7 +93,7 @@ if (isset($_SESSION['user_id'])) {
     </form>
     
     <div style="text-align: center; margin: 20px 0;">
-        <a href="#" style="color: #667eea; text-decoration: none; font-size: 14px;">Forgot Password?</a>
+        <a href="#" style="color: #10b981; text-decoration: none; font-size: 14px;">Forgot Password?</a>
     </div>
     
     <div style="text-align: center; margin: 20px 0; color: #999;">or continue with</div>
@@ -134,7 +134,7 @@ if (isset($_SESSION['user_id'])) {
             var formData = $(this).serialize();
             console.log("Form data:", formData);
 
-            $.post("php/login.php", formData, function(res) {
+            $.post("../php/login.php", formData, function(res) {
                 console.log("Response received:", res);
                 
                 if(res.indexOf("Success") !== -1) {

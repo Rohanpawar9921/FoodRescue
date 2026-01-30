@@ -3,7 +3,8 @@
  * Provides a simple interface to call controller actions
  */
 const API = { //it is an object - single global
-    baseURL: 'api/index.php',
+    // Determine if we're in pages/ subdirectory or root
+    baseURL: window.location.pathname.includes('/pages/') ? '../api/index.php' : 'api/index.php',
     
     // contract documentation - what frontend sends, what backend expects, what frontend receives
     /**

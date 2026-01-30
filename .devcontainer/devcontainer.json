@@ -1,0 +1,28 @@
+{
+    "name": "ShopHub Dev Container",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "web",
+    "workspaceFolder": "/var/www/html",
+    "forwardPorts": [8000],
+    "portsAttributes": {
+        "8000": {
+            "label": "ShopHub Application",
+            "onAutoForward": "notify"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bmewburn.vscode-intelephense-client",
+                "xdebug.php-debug",
+                "bradlc.vscode-tailwindcss"
+            ],
+            "settings": {
+                "php.suggest.basic": false,
+                "php.validate.enable": true,
+                "php.validate.executablePath": "/usr/local/bin/php"
+            }
+        }
+    },
+    "postCreateCommand": "chmod 664 /var/www/html/mini_shop.db 2>/dev/null || true"
+}

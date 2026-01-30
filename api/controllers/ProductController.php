@@ -3,21 +3,27 @@
 class ProductController extends BaseController {
     
     /**
-     * Fetch products with optional category filter
+     * Fetch products with optional category filter and pagination
      */
     public function fetch() {
         $data = $this->getRequestData();
         $category = $data['category'] ?? "";
+        $page = isset($data['page']) ? intval($data['page']) : 1;
+        $limit = isset($data['limit']) ? intval($data['limit']) : 12; // Default 12 products per page
         $isLoggedIn = isset($_SESSION['user_id']);
         
-        // Redis caching (optional)
+        // Ensure page is at least 1
+        $page = max(1, $page);
+        $offset = ($page - 1) * $limit;
+        
+        // Redis caching (optional) - including pagination in cache key
         $useRedis = false;
         try {
             $redis = new Redis();
             $redis->connect('127.0.0.1', 6379);
             $useRedis = true;
             
-            $cacheKey = "products:category:{$category}:logged:".($isLoggedIn ? '1' : '0');
+            $cacheKey = "products:category:{$category}:page:{$page}:limit:{$limit}:logged:".($isLoggedIn ? '1' : '0');
             $cachedData = $redis->get($cacheKey);
             
             if($cachedData !== false) {
@@ -28,6 +34,22 @@ class ProductController extends BaseController {
             $useRedis = false;
         }
         
+        // Get total count for pagination
+        $countSql = "SELECT COUNT(*) as total FROM products";
+        if($category != "") {
+            $countSql .= " WHERE category_id = ?";
+        }
+        
+        $countStmt = $this->db->prepare($countSql);
+        if($category != "") {
+            $countStmt->execute([intval($category)]);
+        } else {
+            $countStmt->execute();
+        }
+        $totalProducts = $countStmt->fetch(PDO::FETCH_ASSOC)['total'];
+        $totalPages = ceil($totalProducts / $limit);
+        
+        // Get products with pagination
         $sql = "SELECT products.*, categories.name as category_name
                 FROM products 
                 JOIN categories ON products.category_id = categories.id";
@@ -36,12 +58,14 @@ class ProductController extends BaseController {
             $sql .= " WHERE products.category_id = ?";
         }
         
+        $sql .= " ORDER BY products.id DESC LIMIT ? OFFSET ?";
+        
         $stmt = $this->db->prepare($sql);
         
         if($category != "") {
-            $stmt->execute([intval($category)]);
+            $stmt->execute([intval($category), $limit, $offset]);
         } else {
-            $stmt->execute();
+            $stmt->execute([$limit, $offset]);
         }
         
         $products = [];
@@ -56,12 +80,25 @@ class ProductController extends BaseController {
             ];
         }
         
+        // Prepare response with pagination metadata
+        $response = [
+            'products' => $products,
+            'pagination' => [
+                'current_page' => $page,
+                'total_pages' => $totalPages,
+                'total_products' => $totalProducts,
+                'per_page' => $limit,
+                'has_next' => $page < $totalPages,
+                'has_prev' => $page > 1
+            ]
+        ];
+        
         // Cache the result if Redis is available
         if ($useRedis && isset($redis)) {
-            $redis->setex($cacheKey, 3600, json_encode($products));
+            $redis->setex($cacheKey, 3600, json_encode($response));
         }
         
-        return $products;
+        return $response;
     }
     
     /**
