@@ -91,6 +91,7 @@ session_start();
             padding: 100px 20px;
             text-align: center;
             overflow: hidden;
+            cursor: pointer;
         }
         
         #hero-canvas {
@@ -106,6 +107,11 @@ session_start();
         .hero-content {
             position: relative;
             z-index: 1;
+        }
+        
+        .hero-content a,
+        .hero-content button {
+            cursor: pointer;
         }
         
         .hero h1 {
@@ -602,6 +608,13 @@ session_start();
             mesh.position.y = (Math.random() - 0.5) * 40;
             mesh.position.z = (Math.random() - 0.5) * 40;
             
+            // Store original positions for distortion effect
+            mesh.originalPosition = {
+                x: mesh.position.x,
+                y: mesh.position.y,
+                z: mesh.position.z
+            };
+            
             // Random rotation speeds
             mesh.rotationSpeed = {
                 x: (Math.random() - 0.5) * 0.01,
@@ -613,6 +626,10 @@ session_start();
             mesh.floatSpeed = Math.random() * 0.02 + 0.01;
             mesh.floatAmplitude = Math.random() * 2 + 1;
             mesh.floatOffset = Math.random() * Math.PI * 2;
+            
+            // Distortion properties
+            mesh.isDistorted = false;
+            mesh.distortionVelocity = { x: 0, y: 0, z: 0 };
             
             shapes.push(mesh);
             scene.add(mesh);
@@ -639,6 +656,41 @@ session_start();
             mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
         });
         
+        // Click distortion effect
+        heroSection.addEventListener('click', (event) => {
+            // Don't trigger if clicking on buttons or links
+            if (event.target.tagName === 'A' || event.target.tagName === 'BUTTON' || 
+                event.target.closest('a') || event.target.closest('button')) {
+                return;
+            }
+            
+            // Get click position in 3D space
+            const rect = heroSection.getBoundingClientRect();
+            const clickX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            const clickY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+            
+            // Apply distortion to all shapes
+            shapes.forEach((shape, index) => {
+                shape.isDistorted = true;
+                
+                // Calculate direction from click point
+                const dx = shape.position.x - clickX * 30;
+                const dy = shape.position.y - clickY * 30;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                // Create explosion effect - shapes fly away from click point
+                const force = 15 / (distance + 1); // Closer shapes get more force
+                shape.distortionVelocity.x = (dx / distance) * force + (Math.random() - 0.5) * 5;
+                shape.distortionVelocity.y = (dy / distance) * force + (Math.random() - 0.5) * 5;
+                shape.distortionVelocity.z = (Math.random() - 0.5) * 10;
+                
+                // Increase rotation speed during distortion
+                shape.rotationSpeed.x *= 3;
+                shape.rotationSpeed.y *= 3;
+                shape.rotationSpeed.z *= 3;
+            });
+        });
+        
         // Animation loop
         let time = 0;
         function animate() {
@@ -647,23 +699,58 @@ session_start();
             
             // Animate each shape
             shapes.forEach((shape, index) => {
-                // Rotation
+                if (shape.isDistorted) {
+                    // Apply distortion velocity
+                    shape.position.x += shape.distortionVelocity.x;
+                    shape.position.y += shape.distortionVelocity.y;
+                    shape.position.z += shape.distortionVelocity.z;
+                    
+                    // Dampen velocity (friction)
+                    shape.distortionVelocity.x *= 0.95;
+                    shape.distortionVelocity.y *= 0.95;
+                    shape.distortionVelocity.z *= 0.95;
+                    
+                    // Pull back to original position (spring effect)
+                    const returnForce = 0.02;
+                    shape.distortionVelocity.x += (shape.originalPosition.x - shape.position.x) * returnForce;
+                    shape.distortionVelocity.y += (shape.originalPosition.y - shape.position.y) * returnForce;
+                    shape.distortionVelocity.z += (shape.originalPosition.z - shape.position.z) * returnForce;
+                    
+                    // Gradually restore rotation speed
+                    shape.rotationSpeed.x *= 0.98;
+                    shape.rotationSpeed.y *= 0.98;
+                    shape.rotationSpeed.z *= 0.98;
+                    
+                    // Check if settled back
+                    const totalVelocity = Math.abs(shape.distortionVelocity.x) + 
+                                        Math.abs(shape.distortionVelocity.y) + 
+                                        Math.abs(shape.distortionVelocity.z);
+                    if (totalVelocity < 0.1) {
+                        shape.isDistorted = false;
+                        // Restore original rotation speed
+                        shape.rotationSpeed.x = (Math.random() - 0.5) * 0.01;
+                        shape.rotationSpeed.y = (Math.random() - 0.5) * 0.01;
+                        shape.rotationSpeed.z = (Math.random() - 0.5) * 0.01;
+                    }
+                } else {
+                    // Normal floating motion
+                    shape.position.y += Math.sin(time * shape.floatSpeed + shape.floatOffset) * 0.05;
+                    
+                    // Parallax effect
+                    shape.position.x += (mouseX * 3 - shape.position.x + shape.originalPosition.x) * 0.01;
+                    shape.position.y += (mouseY * 3 - shape.position.y + shape.originalPosition.y) * 0.01;
+                }
+                
+                // Rotation (always active)
                 shape.rotation.x += shape.rotationSpeed.x;
                 shape.rotation.y += shape.rotationSpeed.y;
                 shape.rotation.z += shape.rotationSpeed.z;
                 
-                // Floating motion
-                shape.position.y += Math.sin(time * shape.floatSpeed + shape.floatOffset) * 0.05;
-                
-                // Parallax effect
-                shape.position.x += (mouseX * 3 - shape.position.x) * 0.01;
-                shape.position.y += (mouseY * 3 - shape.position.y) * 0.01;
-                
                 // Keep shapes within bounds
-                if (Math.abs(shape.position.x) > 40) {
+                if (Math.abs(shape.position.x) > 60) {
                     shape.position.x *= 0.9;
                 }
-                if (Math.abs(shape.position.y) > 30) {
+                if (Math.abs(shape.position.y) > 50) {
                     shape.position.y *= 0.9;
                 }
             });
