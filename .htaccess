@@ -1,0 +1,27 @@
+DirectoryIndex index.php home.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Redirect to pages directory if accessing root
+    RewriteCond %{REQUEST_URI} ^/$
+    RewriteRule ^(.*)$ /pages/ [L,R=301]
+    
+    # Allow access to pages, css, js, api
+    RewriteCond %{REQUEST_URI} ^/(pages|css|js|api)/
+    RewriteRule . - [L]
+</IfModule>
+
+# Allow access to common file types
+<FilesMatch "\.(php|html|css|js|json|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf)$">
+    Require all granted
+</FilesMatch>
+
+# Protect database file
+<FilesMatch "\.db$">
+    Require all denied
+</FilesMatch>
+
+# Enable PHP error display for debugging (remove in production)
+php_flag display_errors Off
+php_flag display_startup_errors Off

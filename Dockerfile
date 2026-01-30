@@ -14,15 +14,18 @@ RUN a2enmod rewrite
 # Set working directory
 WORKDIR /var/www/html
 
-
 # Copy application files
 COPY . /var/www/html/
+
+# Copy Apache configuration
+COPY docker-apache.conf /etc/apache2/sites-available/000-default.conf
 
 
 # Set permissions for database file
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
-    && chmod 664 /var/www/html/mini_shop.db 2>/dev/null || true
+    && chmod 666 /var/www/html/mini_shop.db 2>/dev/null || true \
+    && chmod 777 /var/www/html
 
 # Expose port 80
 EXPOSE 80
